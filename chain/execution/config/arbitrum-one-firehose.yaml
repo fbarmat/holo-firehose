@@ -1,0 +1,33 @@
+start:
+  args:
+    - merger
+    - firehose
+    - reader-node
+    - relayer
+    - index-builder
+  flags:
+    log-to-file: false
+    advertise-chain-name: "arbitrum-one"
+    ignore-advertise-validation: true # Ignore the advertise validation for the chain (Set it to true to avoid the validation error for the arb classic blocks)
+    reader-node-path: /usr/local/bin/nitro
+    common-session-plugin: local://localhost?max_sessions=700&max_sessions_per_user=700
+    # common-first-streamable-block: "22207818"
+    common-first-streamable-block: "0" # Stream all the blocks from the start
+    common-index-block-sizes: "100000"
+    common-auto-max-procs: "true"
+    common-auto-mem-limit-percent: 90
+    firehose-rate-limit-bucket-size: 50
+    firehose-rate-limit-bucket-fill-rate: 1s
+    reader-node-arguments: "--chain.id=42161
+      --parent-chain.connection.url=http://10.0.1.4:8545
+      --parent-chain.blob-client.beacon-url=http://10.0.1.4:15052
+      --init.latest=genesis
+      --http.api=eth,net,web3
+      --http.port=8545
+      --http.addr=0.0.0.0
+      --http.vhosts=*
+      --persistent.chain=/nitro/data
+      --persistent.global-config=/nitro
+      --init.download-path=/nitro
+      --execution.vmtrace.tracer-name=firehose
+      "

@@ -1,0 +1,13 @@
+.DS_STORE
+./chain/.DS_Store
+./chain/execution/.DS_Store
+chain/execution/.DS_Store
+.vscode
+.local
+.env*
+.cursorrules
+./secrets
+./chain/jwttoken
+./chain/jwttoken/*
+chain/jwttoken/
+.ansible

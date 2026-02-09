@@ -1,0 +1,37 @@
+start:
+  args:
+    - merger
+    - firehose
+    - reader-node
+    - relayer
+    - index-builder
+  flags:
+    log-to-file: false
+    common-auto-max-procs: true
+    common-auto-mem-limit-percent: 90
+    common-session-plugin: local://localhost?max_sessions=700&max_sessions_per_user=700
+    reader-node-path: /usr/local/bin/geth
+    firehose-rate-limit-bucket-size: 50
+    firehose-rate-limit-bucket-fill-rate: 1s
+    reader-node-arguments: "
+      --vmtrace=firehose
+      --syncmode=full
+      --datadir /var/lib/firehose
+      --http
+      --http.api=eth,net,web3
+      --http.port=8545
+      --http.addr=0.0.0.0
+      --http.vhosts=*
+      --cache 8192
+      --maxpeers 100
+      --ws
+      --ws.addr=0.0.0.0
+      --ws.port=9756
+      --metrics
+      --metrics.addr=0.0.0.0
+      --metrics.port=7070
+      --authrpc.jwtsecret=/var/lib/firehose/jwt.hex
+      --authrpc.addr=0.0.0.0
+      --authrpc.vhosts=*
+      --authrpc.port=8551
+      "

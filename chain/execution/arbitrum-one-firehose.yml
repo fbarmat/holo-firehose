@@ -1,0 +1,48 @@
+services:
+  arb1-fh:
+    image: customarb/arbitrum-firehose:v3.9.3-g
+    container_name: arb1-fh
+    labels:
+      logging: "promtail"
+      logging_jobname: "chain/execution"
+      component: "arb1-fh"
+    volumes:
+      - ${PROJECT_ROOT_ARBITRUM}/chain/execution/config/arbitrum-one-firehose.yaml:/etc/firehose/config.yml:ro
+      - arbitrum_one_firehose_data:/app/firehose-data/storage
+      - arbitrum_one_nitro_data:/nitro
+    command: ["-c", "/etc/firehose/config.yml", "start"]
+    ports:
+      - "10015:13020" # reader-node gRPC
+      - "13021:13021" # merger gRPC
+    restart: unless-stopped
+    networks:
+      - arbitrum-one-chain-net
+      - arbitrum-one-monitor-net
+    stop_grace_period: 300s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "3g"
+        max-file: "3"
+    deploy:
+      replicas: 1
+
+networks:
+  arbitrum-one-chain-net:
+    driver: overlay
+  arbitrum-one-monitor-net:
+    driver: overlay
+
+volumes:
+  arbitrum_one_firehose_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${ARBITRUM_FIREHOSE_DATA_PATH:-/mnt/chain/arb1-fh-data}
+      o: bind
+  arbitrum_one_nitro_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${ARBITRUM_FIREHOSE_BLOCKS_DATA_PATH:-/mnt/chain/arb1-fh}
+      o: bind
